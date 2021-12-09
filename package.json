@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "pretty": "npx pretty-quick",
-    "prepare": "npm i && npx husky install"
+    "test": "npx jest -i",
+    "build": "npx tsc --outDir dist/src",
+    "start": "node dist/src/server.js",
+    "dev": "npx nodemon --watch \"src/**\" --ext \"ts,json\" --exec \"ts-node src/server.ts\"",
+    "pretty": "npx pretty-quick"
   },
   "keywords": [],
   "author": "",
