@@ -15,7 +15,7 @@ async function createNewQuestion(newQuestion: Question) {
 
   if (insertQuestion.rowCount === 0) return null;
 
-  return insertQuestion.rows[0].id;
+  return insertQuestion.rows[0];
 }
 
 export {

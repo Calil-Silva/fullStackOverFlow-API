@@ -17,7 +17,7 @@ async function addQuestion(req: Request, res: Response) {
   try {
     const newQuestion = await questionsService.addNewQuestion(req.body);
 
-    return res.status(httpStatus.OK).send(newQuestion.toString());
+    return res.status(httpStatus.OK).send(newQuestion);
   } catch (error) {
     if (error instanceof QuestionCreationError) {
       console.log(error);
