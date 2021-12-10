@@ -1,5 +1,5 @@
 import connection from '../database';
-import { Question } from '../protocols/questionsProtocols';
+import { Question } from '../protocols/questionsInterfaces';
 
 async function createNewQuestion(newQuestion: Question) {
   const {

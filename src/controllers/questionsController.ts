@@ -1,19 +1,30 @@
 import { Request, Response } from 'express';
 import * as questionsService from '../services/questionsService';
+import { questionSchema } from '../validations/schemas/question';
+import httpStatus from '../enum/statusCode';
+import QuestionCreationError from '../errors/questionCreationError';
 
 async function addQuestion(req: Request, res: Response) {
-  // const {
-  //   question,
-  //   student,
-  //   _class,
-  //   tags,
-  // } = req.body;
+  const { error: invalidQuestion } = questionSchema.validate(req.body, { abortEarly: false });
+
+  if (invalidQuestion) {
+    const invalidMessages = invalidQuestion.details.map(({ message }) => message);
+    console.log(invalidQuestion);
+
+    return res.status(httpStatus.BAD_REQUEST).send(invalidMessages);
+  }
 
   try {
     const newQuestion = await questionsService.addNewQuestion(req.body);
-    return res.status(200).send(newQuestion.toString());
+
+    return res.status(httpStatus.OK).send(newQuestion.toString());
   } catch (error) {
-    return res.status(500).send({ message: 'Ocorreu um erro inesperado, tente novamente mais tarde.' });
+    if (error instanceof QuestionCreationError) {
+      console.log(error);
+      res.status(httpStatus.BAD_REQUEST).send(error.message);
+    }
+
+    return res.sendStatus(httpStatus.SERVER_ERROR);
   }
 }
 

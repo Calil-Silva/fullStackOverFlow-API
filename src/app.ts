@@ -1,11 +1,11 @@
 import express from 'express';
 import cors from 'cors';
-import * as questionsController from './controllers/questionsController';
+import questionsRouter from './routers/questionsRouter';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.post('/questions', questionsController.addQuestion);
+app.use('/questions', questionsRouter);
 
 export default app;
