@@ -5,12 +5,9 @@ interface NewQuestion {
     tags: string;
 }
 
-interface UnansweredQuestion extends NewQuestion {
+interface Question extends NewQuestion {
     answered: string;
     submitAt: Date;
-    answeredAt?: Date;
-    answeredBy?: string;
-    answer?: string;
 }
 
-export { NewQuestion, UnansweredQuestion };
+export { NewQuestion, Question };

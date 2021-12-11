@@ -3,6 +3,7 @@ import * as questionsService from '../services/questionsService';
 import { questionSchema } from '../validations/schemas/question';
 import httpStatus from '../enum/statusCode';
 import QuestionCreationError from '../errors/questionCreationError';
+import QuestionNotFound from '../errors/QuestionNotFound';
 
 async function addQuestion(req: Request, res: Response) {
   const { error: invalidQuestion } = questionSchema.validate(req.body, { abortEarly: false });
@@ -29,6 +30,24 @@ async function addQuestion(req: Request, res: Response) {
   }
 }
 
+async function getQuestion(req: Request, res: Response) {
+  const id = Number(req.params.id);
+
+  try {
+    const question = await questionsService.getQuestionById(id);
+
+    return res.status(httpStatus.OK).send(question);
+  } catch (error) {
+    if (error instanceof QuestionNotFound) {
+      console.log(error.message);
+      res.status(httpStatus.BAD_REQUEST).send(error.message);
+    }
+    console.log(error);
+    return res.sendStatus(httpStatus.SERVER_ERROR);
+  }
+}
+
 export {
   addQuestion,
+  getQuestion,
 };
