@@ -1,7 +1,7 @@
 import connection from '../database';
-import { Question } from '../protocols/questionsInterfaces';
+import { NewQuestion, UnansweredQuestion } from '../protocols/questionsInterfaces';
 
-async function createNewQuestion(newQuestion: Question) {
+async function createNewQuestion(newQuestion: NewQuestion) {
   const {
     question,
     student,
@@ -18,6 +18,15 @@ async function createNewQuestion(newQuestion: Question) {
   return insertQuestion.rows[0];
 }
 
+async function getQuestionById(id: number): Promise<UnansweredQuestion> {
+  const question = await connection.query(`
+  SELECT * FROM questions WHERE id = $1;
+  `, [id]);
+
+  return question.rows[0];
+}
+
 export {
   createNewQuestion,
+  getQuestionById,
 };

@@ -21,6 +21,7 @@ async function addQuestion(req: Request, res: Response) {
   } catch (error) {
     if (error instanceof QuestionCreationError) {
       console.log(error);
+
       res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
 
