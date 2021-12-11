@@ -7,7 +7,7 @@ const sut = questionsService;
 
 describe('Adding new question', () => {
   test('BD offline', async () => {
-    questionRepositoryContext.mockImplementationOnce((): Promise<Boolean> => null);
+    questionRepositoryContext.mockImplementationOnce(async () => null);
 
     const result = sut.addNewQuestion(question);
     await expect(result).rejects.toThrowError(QuestionCreationError);
