@@ -16,6 +16,7 @@
   "devDependencies": {
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
+    "@types/faker": "^5.5.9",
     "@types/jest": "^27.0.3",
     "@types/joi": "^17.2.3",
     "@types/node": "^16.11.12",
@@ -27,6 +28,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.3",
+    "faker": "^5.5.3",
     "husky": "^7.0.4",
     "jest": "^27.4.4",
     "prettier": "^2.5.1",

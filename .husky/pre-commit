@@ -3,3 +3,4 @@
 
 npx eslint --ext ts,tsx src/*
 npx pretty-quick
+npx jest -i
