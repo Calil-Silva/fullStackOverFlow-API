@@ -1,15 +1,17 @@
 import { Request, Response } from 'express';
+import httpStatus from '../enum/statusCode';
+import QuestionCreationError from '../errors/QuestionCreationError';
+import QuestionNotFound from '../errors/QuestionNotFound';
 import * as questionsService from '../services/questionsService';
 import { questionSchema } from '../validations/schemas/question';
-import httpStatus from '../enum/statusCode';
-import QuestionCreationError from '../errors/questionCreationError';
-import QuestionNotFound from '../errors/QuestionNotFound';
 
 async function addQuestion(req: Request, res: Response) {
   const { error: invalidQuestion } = questionSchema.validate(req.body, { abortEarly: false });
 
   if (invalidQuestion) {
-    const invalidMessages = invalidQuestion.details.map(({ message }) => message);
+    const invalidMessages: string[] = invalidQuestion.details
+      .map(({ message }: {message: string}) => message);
+
     console.log(invalidQuestion);
 
     return res.status(httpStatus.BAD_REQUEST).send(invalidMessages);

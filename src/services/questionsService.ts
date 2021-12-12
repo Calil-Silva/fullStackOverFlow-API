@@ -1,8 +1,8 @@
-import * as questionsRepository from '../repositories/questionsRepository';
-import { NewQuestion, Question } from '../protocols/questionsInterfaces';
-import QuestionCreationError from '../errors/questionCreationError';
-import { Answer } from '../protocols/answersInterfaces';
+import QuestionCreationError from '../errors/QuestionCreationError';
 import QuestionNotFound from '../errors/QuestionNotFound';
+import { Answer } from '../protocols/answersInterfaces';
+import { NewQuestion, Question } from '../protocols/questionsInterfaces';
+import * as questionsRepository from '../repositories/questionsRepository';
 
 async function addNewQuestion(newQuestion: NewQuestion) {
   const addedQuestion = await questionsRepository.createNewQuestion(newQuestion);
