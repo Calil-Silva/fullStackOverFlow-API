@@ -6,7 +6,7 @@ interface NewQuestion {
 }
 
 interface Question extends NewQuestion {
-    answered: string;
+    answered: boolean;
     submitAt: Date;
 }
 

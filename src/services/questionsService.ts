@@ -15,7 +15,7 @@ async function addNewQuestion(newQuestion: NewQuestion) {
   return addedQuestion;
 }
 
-type AnsweredQuestion = NewQuestion & Answer;
+export type AnsweredQuestion = Question & Answer;
 
 async function getQuestionById(id: number): Promise<AnsweredQuestion | Question> {
   const question = await questionsRepository.findQuestionById(id);
