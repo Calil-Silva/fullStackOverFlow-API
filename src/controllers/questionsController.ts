@@ -1,16 +1,19 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import httpStatus from '../enum/statusCode';
 import QuestionCreationError from '../errors/QuestionCreationError';
 import QuestionNotFound from '../errors/QuestionNotFound';
 import * as questionsService from '../services/questionsService';
 import { questionSchema } from '../validations/schemas/question';
 
-async function addQuestion(req: Request, res: Response) {
-  const { error: invalidQuestion } = questionSchema.validate(req.body, { abortEarly: false });
+async function addQuestion(req: Request, res: Response, next: NextFunction) {
+  const { error: invalidQuestion } = questionSchema.validate(req.body, {
+    abortEarly: false,
+  });
 
   if (invalidQuestion) {
-    const invalidMessages: string[] = invalidQuestion.details
-      .map(({ message }: {message: string}) => message);
+    const invalidMessages: string[] = invalidQuestion.details.map(
+      ({ message }: { message: string }) => message,
+    );
 
     console.log(invalidQuestion);
 
@@ -25,14 +28,14 @@ async function addQuestion(req: Request, res: Response) {
     if (error instanceof QuestionCreationError) {
       console.log(error);
 
-      res.status(httpStatus.BAD_REQUEST).send(error.message);
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
 
-    return res.sendStatus(httpStatus.SERVER_ERROR);
+    return next(error);
   }
 }
 
-async function getQuestion(req: Request, res: Response) {
+async function getQuestion(req: Request, res: Response, next: NextFunction) {
   const id = Number(req.params.id);
 
   try {
@@ -42,14 +45,11 @@ async function getQuestion(req: Request, res: Response) {
   } catch (error) {
     if (error instanceof QuestionNotFound) {
       console.log(error.message);
-      res.status(httpStatus.BAD_REQUEST).send(error.message);
+
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
-    console.log(error);
-    return res.sendStatus(httpStatus.SERVER_ERROR);
+    return next(error);
   }
 }
 
-export {
-  addQuestion,
-  getQuestion,
-};
+export { addQuestion, getQuestion };
