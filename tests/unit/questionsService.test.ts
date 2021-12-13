@@ -15,6 +15,7 @@ import {
   mockedCreatedAnswer,
   mockedId,
   mockedNewQuestion,
+  mockedQuestion,
   mockedUnunsweredQuestion,
 } from '../mocks/questions';
 import { cleanDataBase, endConnection } from '../utils/database';
@@ -151,5 +152,25 @@ describe('Post answer', () => {
 
     const result = await sut.answerQuestion(mockedAnswer);
     expect(result).toBe(mockedAnswer.answer);
+  });
+});
+
+describe('Get ununswered questions', () => {
+  test('No questions found', async () => {
+    jest
+      .spyOn(questionsRepository, 'findUnunsweredQuestions')
+      .mockImplementationOnce(async () => null);
+
+    const result = sut.getUnunsweredQuestions();
+    await expect(result).rejects.toThrowError(NotFound);
+  });
+
+  test('Return questions', async () => {
+    jest
+      .spyOn(questionsRepository, 'findUnunsweredQuestions')
+      .mockImplementationOnce(async () => [mockedQuestion]);
+
+    const result = await sut.getUnunsweredQuestions();
+    expect(result).toEqual([mockedQuestion]);
   });
 });

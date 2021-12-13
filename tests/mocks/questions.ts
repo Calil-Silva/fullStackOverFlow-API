@@ -1,6 +1,6 @@
 import faker from 'faker';
 import { AddAnswer, Answer } from '../../src/protocols/answersInterfaces';
-import { Question } from '../../src/protocols/questionsInterfaces';
+import { Question, Questions } from '../../src/protocols/questionsInterfaces';
 import { AnsweredQuestion } from '../../src/services/questionsService';
 
 const mockedNewQuestion = {
@@ -41,6 +41,14 @@ const mockedCreatedAnswer: Answer = {
   answer: faker.random.words(5),
 };
 
+const mockedQuestion: Questions = {
+  id: 1,
+  question: faker.random.words(5),
+  student: faker.name.findName(),
+  class: faker.random.word(),
+  submitedAt: faker.date.recent(),
+};
+
 const mockedId = faker.datatype.number();
 
 export {
@@ -50,4 +58,5 @@ export {
   mockedAnsweredQuestion,
   mockedAnswer,
   mockedCreatedAnswer,
+  mockedQuestion,
 };
