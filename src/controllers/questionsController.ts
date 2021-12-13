@@ -58,8 +58,6 @@ async function postAnswer(req: Request, res: Response, next: NextFunction) {
 
   const body = { ...req.body, questionId };
 
-  console.log(body);
-
   try {
     const answer = await questionsService.answerQuestion(body);
 
