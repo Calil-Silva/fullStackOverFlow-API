@@ -1,6 +1,6 @@
 import InvalidError from '../errors/InvalidError';
+import NotFound from '../errors/NotFound';
 import QuestionCreationError from '../errors/QuestionCreationError';
-import QuestionNotFound from '../errors/QuestionNotFound';
 import { AddAnswer, Answer } from '../protocols/answersInterfaces';
 import { NewQuestion, Question } from '../protocols/questionsInterfaces';
 import * as questionsRepository from '../repositories/questionsRepository';
@@ -28,7 +28,7 @@ async function getQuestionById(
   const isAnswered = question?.answered;
 
   if (!question) {
-    throw new QuestionNotFound('Questão não disponível');
+    throw new NotFound('Questão não disponível');
   }
 
   if (!isAnswered) {
@@ -36,7 +36,7 @@ async function getQuestionById(
   }
 
   const answer = await questionsRepository.findAnswerById(id);
-  console.log(answer);
+
   return { ...question, ...answer };
 }
 
@@ -46,7 +46,15 @@ async function answerQuestion(answerParams: AddAnswer) {
   const question = await questionsRepository.findQuestionById(questionId);
 
   if (!question) {
-    throw new QuestionNotFound('Questão não disponível');
+    throw new NotFound('Questão não disponível');
+  }
+
+  const isAlreadyAnswered = await questionsRepository.findAnswerById(
+    questionId,
+  );
+
+  if (isAlreadyAnswered) {
+    throw new InvalidError('Esta questão já foi respondida');
   }
 
   const userId = await usersService.userValidation(token);

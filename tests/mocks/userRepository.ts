@@ -5,4 +5,9 @@ const usersRepositoryCreateUserContext = jest.spyOn(
   'createUser',
 );
 
-export { usersRepositoryCreateUserContext };
+const usersRepositoryFindUserContext = jest.spyOn(
+  usersRepository,
+  'findUserByToken',
+);
+
+export { usersRepositoryCreateUserContext, usersRepositoryFindUserContext };

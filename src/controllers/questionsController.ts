@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from '../enum/statusCode';
 import InvalidError from '../errors/InvalidError';
+import NotFound from '../errors/NotFound';
 import QuestionCreationError from '../errors/QuestionCreationError';
-import QuestionNotFound from '../errors/QuestionNotFound';
 import * as questionsService from '../services/questionsService';
 import { questionSchema } from '../validations/schemas/question';
 
@@ -44,7 +44,7 @@ async function getQuestion(req: Request, res: Response, next: NextFunction) {
 
     return res.status(httpStatus.OK).send(question);
   } catch (error) {
-    if (error instanceof QuestionNotFound) {
+    if (error instanceof NotFound) {
       console.error(error);
 
       return res.status(httpStatus.BAD_REQUEST).send(error.message);
@@ -54,12 +54,18 @@ async function getQuestion(req: Request, res: Response, next: NextFunction) {
 }
 
 async function postAnswer(req: Request, res: Response, next: NextFunction) {
+  const questionId = Number(req.params.id);
+
+  const body = { ...req.body, questionId };
+
+  console.log(body);
+
   try {
-    const answer = await questionsService.answerQuestion(req.body);
+    const answer = await questionsService.answerQuestion(body);
 
     return res.status(httpStatus.ACCEPTED).send(answer);
   } catch (error) {
-    if (error instanceof QuestionNotFound) {
+    if (error instanceof NotFound) {
       console.error(error);
 
       return res.status(httpStatus.BAD_REQUEST).send(error.message);
