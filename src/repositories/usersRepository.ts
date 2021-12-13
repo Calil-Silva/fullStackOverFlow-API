@@ -16,4 +16,17 @@ async function createUser(user: NewUserValidation): Promise<string | null> {
   return newUser.rows[0];
 }
 
-export { createUser };
+async function findUserByToken(token: string) {
+  const user = await connection.query(
+    `
+    SELECT * FROM users WHERE token = $1;
+    `,
+    [token],
+  );
+
+  if (!user) return null;
+
+  return user.rows[0].id;
+}
+
+export { createUser, findUserByToken };

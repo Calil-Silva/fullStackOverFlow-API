@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.post('/', questionsController.addQuestion);
 router.get('/:id', questionsController.getQuestion);
+router.post('/:id', questionsController.postAnswer);
 
 export default router;

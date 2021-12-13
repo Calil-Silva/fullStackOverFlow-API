@@ -1,11 +1,15 @@
+import InvalidError from '../errors/InvalidError';
+import NotFound from '../errors/NotFound';
 import QuestionCreationError from '../errors/QuestionCreationError';
-import QuestionNotFound from '../errors/QuestionNotFound';
-import { Answer } from '../protocols/answersInterfaces';
+import { AddAnswer, Answer } from '../protocols/answersInterfaces';
 import { NewQuestion, Question } from '../protocols/questionsInterfaces';
 import * as questionsRepository from '../repositories/questionsRepository';
+import * as usersService from '../services/usersService';
 
 async function addNewQuestion(newQuestion: NewQuestion) {
-  const addedQuestion = await questionsRepository.createNewQuestion(newQuestion);
+  const addedQuestion = await questionsRepository.createNewQuestion(
+    newQuestion,
+  );
 
   if (!addedQuestion) {
     throw new QuestionCreationError(`
@@ -17,12 +21,14 @@ async function addNewQuestion(newQuestion: NewQuestion) {
 
 export type AnsweredQuestion = Question & Answer;
 
-async function getQuestionById(id: number): Promise<AnsweredQuestion | Question> {
+async function getQuestionById(
+  id: number,
+): Promise<AnsweredQuestion | Question> {
   const question = await questionsRepository.findQuestionById(id);
   const isAnswered = question?.answered;
 
   if (!question) {
-    throw new QuestionNotFound('Questão não disponível');
+    throw new NotFound('Questão não disponível');
   }
 
   if (!isAnswered) {
@@ -34,4 +40,34 @@ async function getQuestionById(id: number): Promise<AnsweredQuestion | Question>
   return { ...question, ...answer };
 }
 
-export { addNewQuestion, getQuestionById };
+async function answerQuestion(answerParams: AddAnswer) {
+  const { questionId, token } = answerParams;
+
+  const question = await questionsRepository.findQuestionById(questionId);
+
+  if (!question) {
+    throw new NotFound('Questão não disponível');
+  }
+
+  const isAlreadyAnswered = await questionsRepository.findAnswerById(
+    questionId,
+  );
+
+  if (isAlreadyAnswered) {
+    throw new InvalidError('Esta questão já foi respondida');
+  }
+
+  const userId = await usersService.userValidation(token);
+
+  const body = { ...answerParams, answeredBy: userId };
+
+  const answer = await questionsRepository.addAnswer(body);
+
+  if (!answer) {
+    throw new InvalidError('Ocorreu um problema, tente mais tarde');
+  }
+
+  return answer;
+}
+
+export { addNewQuestion, getQuestionById, answerQuestion };
