@@ -1,11 +1,11 @@
 import supertest from 'supertest';
-import '../../src/setup';
 import app from '../../src/app';
 import connection from '../../src/database';
-import { cleanDataBase, endConnection } from '../utils/database';
-import { mockedNewQuestion } from '../mocks/questions';
-import { createQuestion } from '../factories/questionsFactory';
 import httpStatus from '../../src/enum/statusCode';
+import '../../src/setup';
+import { createQuestion } from '../factories/questionsFactory';
+import { mockedNewQuestion } from '../mocks/questions';
+import { cleanDataBase, endConnection } from '../utils/database';
 
 const agent = supertest(app);
 
@@ -18,9 +18,11 @@ afterAll(async () => {
 
 describe('POST /questions', () => {
   test('Saves the question and return status code 200 for valid params', async () => {
-    const beforeInsert = (await connection.query('SELECT * FROM questions;')).rowCount;
+    const beforeInsert = (await connection.query('SELECT * FROM questions;'))
+      .rowCount;
     const result = await agent.post('/questions').send(mockedNewQuestion);
-    const afterInsert = (await connection.query('SELECT * FROM questions;')).rowCount;
+    const afterInsert = (await connection.query('SELECT * FROM questions;'))
+      .rowCount;
 
     expect(result.status).toEqual(200);
     expect(beforeInsert).toBe(0);
@@ -38,9 +40,7 @@ describe('GET /questions/:id', () => {
   });
 
   test('Get a question and return status code 200 for valid params', async () => {
-    const beforeInsert = (await connection.query('SELECT * FROM questions;')).rowCount;
     const result = await agent.get('/questions/1');
-    const afterInsert = (await connection.query('SELECT * FROM questions;')).rowCount;
 
     expect(result.status).toEqual(httpStatus.OK);
   });
