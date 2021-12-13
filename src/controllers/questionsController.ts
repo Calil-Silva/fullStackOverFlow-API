@@ -55,8 +55,9 @@ async function getQuestion(req: Request, res: Response, next: NextFunction) {
 
 async function postAnswer(req: Request, res: Response, next: NextFunction) {
   const questionId = Number(req.params.id);
+  const token = req.headers.authorization?.replace('Bearer ', '');
 
-  const body = { ...req.body, questionId };
+  const body = { ...req.body, questionId, token };
 
   try {
     const answer = await questionsService.answerQuestion(body);

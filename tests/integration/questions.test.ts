@@ -61,11 +61,13 @@ describe('POST /questions/:id', () => {
     const token = await createUser();
 
     const body = {
-      token,
       answer: faker.random.words(5),
     };
 
-    const result = await agent.post('/questions/1').send(body);
+    const result = await agent
+      .post('/questions/1')
+      .set('Authorization', `Bearer ${token}`)
+      .send(body);
 
     expect(result.status).toEqual(202);
   });
