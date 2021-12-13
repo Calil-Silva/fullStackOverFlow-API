@@ -14,7 +14,7 @@ async function createNewUser(req: Request, res: Response, next: NextFunction) {
       ({ message }: { message: string }) => message,
     );
 
-    console.log(invalidUser);
+    console.error(invalidUser);
 
     return res.status(httpStatus.BAD_REQUEST).send(invalidMessages);
   }
@@ -25,7 +25,7 @@ async function createNewUser(req: Request, res: Response, next: NextFunction) {
     return res.status(httpStatus.CREATED).send(createdUser);
   } catch (error) {
     if (error instanceof InvalidError) {
-      console.log(error);
+      console.error(error);
 
       return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }

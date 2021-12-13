@@ -8,7 +8,7 @@ async function createUser(user: NewUser): Promise<string> {
 
   const createdUser = await usersRepository.createUser(userCredentials);
 
-  if (!user) {
+  if (!createdUser) {
     throw new InvalidError('Um problema ocorreu');
   }
 

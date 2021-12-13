@@ -15,7 +15,7 @@ async function addQuestion(req: Request, res: Response, next: NextFunction) {
       ({ message }: { message: string }) => message,
     );
 
-    console.log(invalidQuestion);
+    console.error(invalidQuestion);
 
     return res.status(httpStatus.BAD_REQUEST).send(invalidMessages);
   }
@@ -26,7 +26,7 @@ async function addQuestion(req: Request, res: Response, next: NextFunction) {
     return res.status(httpStatus.OK).send(newQuestion);
   } catch (error) {
     if (error instanceof QuestionCreationError) {
-      console.log(error.message);
+      console.error(error.message);
 
       return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
@@ -44,7 +44,7 @@ async function getQuestion(req: Request, res: Response, next: NextFunction) {
     return res.status(httpStatus.OK).send(question);
   } catch (error) {
     if (error instanceof QuestionNotFound) {
-      console.log(error.message);
+      console.error(error.message);
 
       return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }

@@ -6,7 +6,7 @@ async function createUser(user: NewUserValidation): Promise<string | null> {
 
   const newUser = await connection.query(
     `
-  INSERT INTO users (name, class, token) VALUES ($1, $2, $3);
+  INSERT INTO users (name, class, token) VALUES ($1, $2, $3) RETURNING token;
         `,
     [name, _class, token],
   );
