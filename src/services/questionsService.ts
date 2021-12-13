@@ -70,4 +70,19 @@ async function answerQuestion(answerParams: AddAnswer) {
   return answer;
 }
 
-export { addNewQuestion, getQuestionById, answerQuestion };
+async function getUnunsweredQuestions() {
+  const questions = await questionsRepository.findUnunsweredQuestions();
+
+  if (!questions) {
+    throw new NotFound('Não encontramos nenhuma questão não respondida');
+  }
+
+  return questions;
+}
+
+export {
+  addNewQuestion,
+  getQuestionById,
+  answerQuestion,
+  getUnunsweredQuestions,
+};

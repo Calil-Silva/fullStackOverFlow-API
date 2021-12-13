@@ -78,4 +78,24 @@ async function postAnswer(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { addQuestion, getQuestion, postAnswer };
+async function getUnunsweredQuestions(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const questions = await questionsService.getUnunsweredQuestions();
+
+    return res.status(httpStatus.OK).send(questions);
+  } catch (error) {
+    if (error instanceof NotFound) {
+      console.error(error);
+
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
+    }
+
+    return next(error);
+  }
+}
+
+export { addQuestion, getQuestion, postAnswer, getUnunsweredQuestions };

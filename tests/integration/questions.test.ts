@@ -72,3 +72,13 @@ describe('POST /questions/:id', () => {
     expect(result.status).toEqual(202);
   });
 });
+
+describe('GET /questions/', () => {
+  test('Should return status code 200 if there is ununswered questions', async () => {
+    await createQuestion();
+
+    const result = await agent.get('/questions/1');
+
+    expect(result.status).toEqual(200);
+  });
+});

@@ -1,6 +1,10 @@
 import connection from '../database';
 import { AddAnswer, Answer } from '../protocols/answersInterfaces';
-import { NewQuestion, Question } from '../protocols/questionsInterfaces';
+import {
+  NewQuestion,
+  Question,
+  Questions,
+} from '../protocols/questionsInterfaces';
 
 async function createNewQuestion(newQuestion: NewQuestion) {
   const { question, student, _class, tags } = newQuestion;
@@ -31,7 +35,7 @@ async function findQuestionById(id: number): Promise<Question> {
 async function findAnswerById(id: number): Promise<Answer> {
   const answer = await connection.query(
     `
-    SELECT answers.answered_at as answeredAt, users.name as answeredBy, answer 
+    SELECT answers.answered_at as "answeredAt", users.name as "answeredBy", answer 
       FROM answers 
     JOIN users ON users.id = answers.answered_by
       WHERE question_id = $1;
@@ -64,4 +68,25 @@ async function addAnswer(answerParams: AddAnswer) {
   return newAnswer.rows[0];
 }
 
-export { createNewQuestion, findQuestionById, findAnswerById, addAnswer };
+async function findUnunsweredQuestions(): Promise<Questions[]> {
+  const questions = await connection.query(
+    `
+  SELECT id, question, student, class, submited_at as "submitedAt"
+      FROM questions
+      WHERE answered = $1;
+  `,
+    [false],
+  );
+
+  if (questions.rowCount === 0) return null;
+
+  return questions.rows;
+}
+
+export {
+  createNewQuestion,
+  findQuestionById,
+  findAnswerById,
+  addAnswer,
+  findUnunsweredQuestions,
+};
