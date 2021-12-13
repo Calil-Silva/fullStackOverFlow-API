@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from '../enum/statusCode';
+import InvalidError from '../errors/InvalidError';
 import QuestionCreationError from '../errors/QuestionCreationError';
 import QuestionNotFound from '../errors/QuestionNotFound';
 import * as questionsService from '../services/questionsService';
@@ -26,7 +27,7 @@ async function addQuestion(req: Request, res: Response, next: NextFunction) {
     return res.status(httpStatus.OK).send(newQuestion);
   } catch (error) {
     if (error instanceof QuestionCreationError) {
-      console.error(error.message);
+      console.error(error);
 
       return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
@@ -44,7 +45,7 @@ async function getQuestion(req: Request, res: Response, next: NextFunction) {
     return res.status(httpStatus.OK).send(question);
   } catch (error) {
     if (error instanceof QuestionNotFound) {
-      console.error(error.message);
+      console.error(error);
 
       return res.status(httpStatus.BAD_REQUEST).send(error.message);
     }
@@ -52,4 +53,24 @@ async function getQuestion(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { addQuestion, getQuestion };
+async function postAnswer(req: Request, res: Response, next: NextFunction) {
+  try {
+    const answer = await questionsService.answerQuestion(req.body);
+
+    return res.status(httpStatus.ACCEPTED).send(answer);
+  } catch (error) {
+    if (error instanceof QuestionNotFound) {
+      console.error(error);
+
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
+    }
+    if (error instanceof InvalidError) {
+      console.error(error);
+
+      return res.status(httpStatus.BAD_REQUEST).send(error.message);
+    }
+    return next(error);
+  }
+}
+
+export { addQuestion, getQuestion, postAnswer };

@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
 import InvalidError from '../errors/InvalidError';
+import QuestionNotFound from '../errors/QuestionNotFound';
 import { NewUser, NewUserValidation } from '../protocols/usersInterfaces';
 import * as usersRepository from '../repositories/usersRepository';
 
@@ -15,4 +16,14 @@ async function createUser(user: NewUser): Promise<string> {
   return createdUser;
 }
 
-export { createUser };
+async function userValidation(token: string) {
+  const user = await usersRepository.findUserByToken(token);
+
+  if (!user) {
+    throw new QuestionNotFound('Usuário não encontrado');
+  }
+
+  return user;
+}
+
+export { createUser, userValidation };

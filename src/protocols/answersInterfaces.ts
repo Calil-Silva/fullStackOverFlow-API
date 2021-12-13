@@ -1,7 +1,12 @@
 interface Answer {
-    answered_at: Date;
-    answered_by: string;
-    answer: string;
+  questionId?: number;
+  answeredAt?: Date;
+  answeredBy?: number;
+  answer: string;
 }
 
-export { Answer };
+interface AddAnswer extends Answer {
+  token: string;
+}
+
+export { Answer, AddAnswer };
