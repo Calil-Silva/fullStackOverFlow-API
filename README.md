@@ -90,13 +90,13 @@ In the project directory, you can run:
 
 Runs the app in the production environment.
 
-### `npm start:dev`
+### `npm dev`
 
-Runs the app in the development environment.
+Runs the app by nodemon.
 
-### `npm start:test`
+### `npm build`
 
-Runs the app in the test menvironmentode. This was created just for testing proposes.
+Builds the app for deployment.
 
 ### `npm test`
 
